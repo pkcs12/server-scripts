@@ -9,5 +9,5 @@ read USERNAME
 
 echo "Installing..."
 
-scp curl.sh $USERNAME@$IP:/home/$USERNAME
-ssh -t $USERNAME@$IP 'chmod +x curl.sh; sudo sh ./curl.sh; exit'
+scp curl-http2.sh $USERNAME@$IP:/home/$USERNAME
+ssh -t $USERNAME@$IP 'chmod +x curl-http2.sh; sudo sh ./curl-http2.sh; exit'
