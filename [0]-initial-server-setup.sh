@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo -e "Please type IP of server.\r\nNOTE: you should have publickey installed on server for root user.\r\nServer IP: \c"
+echo "This script will make initial setup for new server."
+
+echo -e "Please type server IP.\r\nNOTE: you should have publickey installed on server for root user.\r\nServer IP: \c"
 read IP
 
 echo "Setting default locale"
