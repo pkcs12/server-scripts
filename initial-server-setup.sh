@@ -1,46 +1,50 @@
 #!/bin/bash
 
-echo "Server IP:"
+echo -e "Please type IP of server.\r\nNOTE: you should have publickey installed on server for root user.\r\nServer IP: \c"
 read IP
-echo "New username:"
-read USERNAME
 
-echo "Set default locale"
+echo "Setting default locale"
 # 1. copy shell script to server
 # 2. make it executable and run it
 scp ./locale.sh root@$IP:/root/locale.sh
 ssh root@$IP 'chmod +x locale.sh; sh ./locale.sh'
 
-echo "Set swap file"
+echo "Setting swap file"
 # 1. copy shell script to server
 # 2. make it executable and run it
 scp ./swap.sh root@$IP:/root/swap.sh
 ssh root@$IP 'chmod +x swap.sh; sh ./swap.sh'
 
-echo "Create new user $USERNAME"
+
+echo "Creating new user"
+echo -e "Username: \c"
+read USERNAME
 # 1. create user with specified password
 # 2. add user to sudo group
 # 3. make bash default shell
-SCRIPT="useradd -b /home -g users -m $USERNAME; passwd --quiet $USERNAME; usermod -aG sudo $USERNAME; usermod -s /bin/bash $USERNAME; exit"
+
+SCRIPT="useradd -b /home -g users -m -p $(read -sp Password: pw; echo $pw | openssl passwd -crypt -stdin) $USERNAME; usermod -aG sudo $USERNAME; usermod -s /bin/bash $USERNAME; echo ''; exit"
 if ssh root@$IP $SCRIPT ; then
-    echo "echo 'User $USERNAME' created"
+    echo "User $USERNAME created"
 else
     echo "Failed to create user $USERNAME"
     exit
 fi
 
-echo "Copy ssh-key to $USERNAME@$IP's known_hosts"
-if ssh-copy-id $USERNAME@$IP ; then
-    echo "Copied for $USERNAME"
-else
-    echo "Failed to copy ssh key for $USERNAME"
-    exit
-fi
 echo "Copy ssh-key to root@$IP's known_hosts"
 if ssh-copy-id root@$IP ; then
     echo "Copied for root"
 else
     echo "Failed to copy ssh key for root"
+    exit
+fi
+
+echo "Copy ssh-key to $USERNAME@$IP's known_hosts"
+SCRIPT="mkdir -p /home/$USERNAME/.ssh; chmod 700 /home/$USERNAME/.ssh; cp /root/.ssh/authorized_keys /home/$USERNAME/.ssh/authorized_keys; chmod 600 /home/$USERNAME/.ssh/authorized_keys; chown -R $USERNAME /home/$USERNAME/.ssh"
+if ssh root@$IP $SCRIPT ; then
+    echo "Copied for $USERNAME"
+else
+    echo "Failed to copy ssh key for $USERNAME"
     exit
 fi
 
@@ -57,7 +61,7 @@ else
 fi
 
 echo "Checking login as $USERNAME"
-if ssh $USERNAME@$IP 'exit' ; then
+if ssh $USERNAME@$IP 'echo "Logged in"; exit' ; then
     echo "Success. Everything seems to be fine"
 else
     echo "Failed. Something went wrong"
