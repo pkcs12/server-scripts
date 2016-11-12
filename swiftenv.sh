@@ -16,6 +16,4 @@ echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> ~/.bashrc
 echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(swiftenv init -)"' >> ~/.bashrc
 
-#sudo chmod -R o+r ~/.swiftenv
-
-#echo "swiftenv successfully installed. Please logout and login back to apply changes"
+sudo chmod -R o+r ~/.swiftenv

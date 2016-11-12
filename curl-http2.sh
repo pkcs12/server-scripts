@@ -31,9 +31,6 @@ fi
 
 rm -rf ~/nghttp2
 
-echo "Installing dependencies for curl:"
-sudo apt-get install build-essentials -y
-
 echo "Cloning latest curl..."
 cd ~/
 sudo git clone https://github.com/curl/curl.git
@@ -43,6 +40,9 @@ sudo git clone https://github.com/curl/curl.git
 cd curl
 
 echo "Building curl..."
+
+#uninstall curl which were installed by default via apt-get
+#sudo apt-get remove curl -y
 
 sudo ./buildconf
 ./configure --help
