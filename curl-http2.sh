@@ -32,7 +32,7 @@ fi
 rm -rf ~/nghttp2
 
 echo "Installing dependencies for curl:"
-sudo apt-get install build-essentials curl -y
+sudo apt-get install build-essentials -y
 
 echo "Cloning latest curl..."
 cd ~/
@@ -53,13 +53,24 @@ sudo make
 sudo make install
 sudo ldconfig
 
+#this fixes the problem:
+#vapor: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/lib/swift/linux/libFoundation.so)
+sudo ln -fs /usr/lib/libcurl.so.4 /usr/local/lib/
+
 echo "Testing installation..."
-if [[ $(curl -V | grep HTTP2) ]]; then
-    echo "curl with http/2 installed"
-else
+line=$(curl -V | grep HTTP2)
+if [[ "$line" =~ ^$ ]]; then
     echo "Failed to install curl with http/2"
     exit
+else
+    echo "curl with http/2 installed"
 fi
+#if [[ $(curl -V | grep HTTP2) ]]; then
+#    echo "curl with http/2 installed"
+#else
+#    echo "Failed to install curl with http/2"
+#    exit
+#fi
 
 rm -rf ~/curl
 
