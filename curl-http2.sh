@@ -55,7 +55,7 @@ sudo ldconfig
 
 #this fixes the problem:
 #vapor: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/lib/swift/linux/libFoundation.so)
-sudo ln -fs /usr/lib/libcurl.so.4 /usr/local/lib/
+#sudo ln -fs /usr/lib/libcurl.so.4 /usr/local/lib/
 
 echo "Testing installation..."
 line=$(curl -V | grep HTTP2)
